@@ -44,39 +44,6 @@ Tested on one clock board:
 - `build.ps1` - build firmware with ST Toolset assembler
 - `flash.ps1` - flash `.s19` with STVP command line
 
-## Build
-
-Install ST Visual Develop / ST Toolset for STM8. The default scripts expect:
-
-```powershell
-C:\Program Files (x86)\STMicroelectronics\st_toolset\asm\
-C:\Program Files (x86)\STMicroelectronics\st_toolset\stvp\
-```
-
-Build:
-
-```powershell
-.\build.ps1
-```
-
-If PowerShell blocks local scripts, use:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\build.ps1
-```
-
-Flash with ST-Link V2:
-
-```powershell
-.\flash.ps1
-```
-
-or:
-
-```powershell
-powershell -ExecutionPolicy Bypass -File .\flash.ps1
-```
-
 ## Hardware warning
 
 This project drives a Nixie clock board. The board contains a high-voltage supply for the tubes. Disconnect power before probing or wiring the programmer, and be careful around the tube supply section.
