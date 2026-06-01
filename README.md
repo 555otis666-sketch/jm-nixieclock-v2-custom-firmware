@@ -16,6 +16,10 @@ This board may be found online under several similar names:
 - `Geek Styles IN-14 Nixie Clock`
 - `IN-14 STM8 Nixie Clock`
 - `STM8S003F3P6 DS3231 Nixie Clock`
+- `NAP Nixie`
+- `AliExpress Nixie Clock`
+- `AliExpress IN14 Nixie Clock Kit`
+- `IN14 Nixie AliExpress`
 
 ## Current status
 
