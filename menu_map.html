@@ -1,0 +1,424 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NixieClock Menu Map</title>
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --ink: #050505;
+      --line: #111;
+      --muted: #555;
+      --mode: #050505;
+      --mode-ink: #fff;
+      --box: #fff;
+      --accent: #e8f1ff;
+      --night: #fff1e8;
+      --green: #e7f7ec;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 13px/1.25 Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      padding: 14px 18px 8px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 0;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .sample {
+      width: 34px;
+      height: 18px;
+      border: 2px solid var(--line);
+      border-radius: 5px;
+      background: var(--box);
+    }
+
+    .sample.black {
+      background: var(--mode);
+    }
+
+    .wrap {
+      width: 100vw;
+      height: calc(100vh - 52px);
+      overflow: auto;
+      padding: 14px 18px 28px;
+    }
+
+    .canvas {
+      position: relative;
+      width: 1950px;
+      height: 1210px;
+      background: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 8px 30px rgba(0,0,0,.08);
+    }
+
+    .node {
+      position: absolute;
+      z-index: 3;
+      min-width: 96px;
+      min-height: 38px;
+      padding: 7px 10px;
+      border: 2px solid var(--line);
+      border-radius: 7px;
+      background: var(--box);
+      color: var(--ink);
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .node.small {
+      min-width: 74px;
+      min-height: 30px;
+      font-size: 12px;
+      padding: 5px 8px;
+    }
+
+    .node.wide {
+      min-width: 136px;
+    }
+
+    .node.mode {
+      background: var(--mode);
+      color: var(--mode-ink);
+      border-color: var(--mode);
+      font-weight: 800;
+    }
+
+    .node.info {
+      background: var(--accent);
+    }
+
+    .node.night {
+      background: var(--night);
+    }
+
+    .node.green {
+      background: var(--green);
+    }
+
+    .pill {
+      position: absolute;
+      z-index: 4;
+      min-width: 96px;
+      height: 27px;
+      padding: 6px 13px;
+      border-radius: 999px;
+      background: var(--mode);
+      color: #fff;
+      font-weight: 800;
+      text-align: center;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+
+    .btn {
+      position: absolute;
+      z-index: 5;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--mode);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 10px;
+      text-align: center;
+      line-height: 1;
+    }
+
+    .hint {
+      position: absolute;
+      color: var(--muted);
+      font-size: 12px;
+      max-width: 150px;
+    }
+
+    .display {
+      position: absolute;
+      z-index: 4;
+      font: 24px/1.1 "Courier New", monospace;
+      letter-spacing: 4px;
+      white-space: pre;
+    }
+
+    .display.small {
+      font-size: 20px;
+    }
+
+    .wire {
+      position: absolute;
+      z-index: 1;
+      background: #8b8b8b;
+      transform-origin: left center;
+    }
+
+    .wire.h {
+      height: 2px;
+    }
+
+    .wire.v {
+      width: 2px;
+    }
+
+    .arrow-r::after,
+    .arrow-l::after,
+    .arrow-d::after,
+    .arrow-u::after {
+      content: "";
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .arrow-r::after {
+      right: -1px;
+      top: -5px;
+      border-width: 6px 0 6px 9px;
+      border-color: transparent transparent transparent var(--line);
+    }
+
+    .arrow-l::after {
+      left: -1px;
+      top: -5px;
+      border-width: 6px 9px 6px 0;
+      border-color: transparent var(--line) transparent transparent;
+    }
+
+    .arrow-d::after {
+      left: -5px;
+      bottom: -1px;
+      border-width: 9px 6px 0 6px;
+      border-color: var(--line) transparent transparent transparent;
+    }
+
+    .arrow-u::after {
+      left: -5px;
+      top: -1px;
+      border-width: 0 6px 9px 6px;
+      border-color: transparent transparent var(--line) transparent;
+    }
+
+    .caption {
+      position: absolute;
+      z-index: 4;
+      padding: 2px 4px;
+      background: rgba(245,245,245,.96);
+      border-radius: 4px;
+      font-size: 11px;
+      color: var(--muted);
+      text-align: center;
+      max-width: 120px;
+    }
+
+    .tiny {
+      font-size: 10px;
+      line-height: 1.15;
+      font-weight: 700;
+    }
+
+    .note-box {
+      position: absolute;
+      z-index: 4;
+      min-width: 120px;
+      max-width: 190px;
+      padding: 7px 9px;
+      border: 2px solid var(--line);
+      border-radius: 7px;
+      background: #fff;
+      font-size: 11px;
+      line-height: 1.2;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>NixieClock IN-14 Menu Map</h1>
+    <div class="legend">
+      <span><i class="sample black"></i> mode / menu</span>
+      <span><i class="sample"></i> setting</span>
+      <span>black circle = button</span>
+      <span>-- = seconds tubes off</span>
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="canvas">
+      <!-- Left display examples -->
+      <div class="display" style="left:26px;top:70px;">16:30:12</div>
+      <div class="display small" style="left:34px;top:215px;">HHMM--</div>
+      <div class="display small" style="left:34px;top:390px;">000000</div>
+      <div class="display small" style="left:24px;top:610px;">1-----</div>
+      <div class="display small" style="left:34px;top:930px;">0..9</div>
+
+      <!-- Main vertical path -->
+      <div class="node mode" style="left:190px;top:32px;">POWER ON</div>
+      <div class="wire v arrow-d" style="left:238px;top:70px;height:42px;"></div>
+      <div class="node mode" style="left:190px;top:115px;">NORMAL<br>HHMMSS</div>
+
+      <div class="wire v arrow-d" style="left:238px;top:153px;height:70px;"></div>
+      <div class="node mode" style="left:190px;top:245px;">SET TIME<br>HHMM--</div>
+
+      <div class="wire v arrow-d" style="left:238px;top:283px;height:92px;"></div>
+      <div class="node mode" style="left:190px;top:400px;">NIGHT<br>ON/OFF</div>
+
+      <div class="wire v arrow-d" style="left:238px;top:438px;height:142px;"></div>
+      <div class="node mode" style="left:190px;top:610px;">ANTI<br>POISON</div>
+
+      <div class="wire v arrow-d" style="left:238px;top:648px;height:242px;"></div>
+      <div class="node mode" style="left:190px;top:930px;">RGB / 12H<br>QUICK MODES</div>
+
+      <!-- Normal quick actions -->
+      <div class="pill" style="left:310px;top:110px;">SHORT UP</div>
+      <div class="wire h arrow-r" style="left:286px;top:132px;width:125px;"></div>
+      <div class="node info" style="left:430px;top:112px;">12h / 24h</div>
+      <div class="wire h arrow-r" style="left:532px;top:132px;width:92px;"></div>
+      <div class="node small" style="left:640px;top:116px;">Save<br>EEPROM</div>
+
+      <div class="pill" style="left:310px;top:178px;">SHORT DOWN</div>
+      <div class="wire h arrow-r" style="left:286px;top:200px;width:125px;"></div>
+      <div class="node info wide" style="left:430px;top:180px;">RGB MODE</div>
+      <div class="btn" style="left:595px;top:183px;">DOWN</div>
+      <div class="note-box" style="left:650px;top:172px;">
+        AUTO -> OFF -> RED -> PURPLE -> YELLOW -> PINK -> GREEN -> BLUE
+      </div>
+      <div class="wire h arrow-r" style="left:850px;top:200px;width:88px;"></div>
+      <div class="node small" style="left:955px;top:184px;">Save<br>EEPROM</div>
+
+      <!-- SET time branch -->
+      <div class="pill" style="left:310px;top:245px;">SHORT SET</div>
+      <div class="wire h arrow-r" style="left:286px;top:267px;width:125px;"></div>
+      <div class="node" style="left:430px;top:247px;">Digit 1<br>hour tens</div>
+      <div class="btn" style="left:570px;top:250px;">SET</div>
+      <div class="wire h arrow-r" style="left:529px;top:267px;width:125px;"></div>
+      <div class="node" style="left:675px;top:247px;">Digit 2<br>hour ones</div>
+      <div class="btn" style="left:815px;top:250px;">SET</div>
+      <div class="wire h arrow-r" style="left:774px;top:267px;width:125px;"></div>
+      <div class="node" style="left:920px;top:247px;">Digit 3<br>minute tens</div>
+      <div class="btn" style="left:1065px;top:250px;">SET</div>
+      <div class="wire h arrow-r" style="left:1024px;top:267px;width:125px;"></div>
+      <div class="node" style="left:1170px;top:247px;">Digit 4<br>minute ones</div>
+      <div class="btn" style="left:1320px;top:250px;">SET</div>
+      <div class="wire h arrow-r" style="left:1279px;top:267px;width:125px;"></div>
+      <div class="node green" style="left:1425px;top:247px;">Save time<br>DS3231</div>
+      <div class="wire h arrow-r" style="left:1543px;top:267px;width:72px;"></div>
+      <div class="node small" style="left:1630px;top:251px;">Return</div>
+
+      <div class="caption" style="left:430px;top:302px;">UP/DOWN changes digit</div>
+      <div class="caption" style="left:675px;top:302px;">when H tens = 2,<br>max 3</div>
+      <div class="caption" style="left:920px;top:302px;">max 5</div>
+      <div class="caption" style="left:1170px;top:302px;">0-9</div>
+
+      <!-- Night ON/OFF branch -->
+      <div class="pill" style="left:310px;top:382px;">LONG SET</div>
+      <div class="wire h arrow-r" style="left:286px;top:404px;width:125px;"></div>
+      <div class="node night" style="left:430px;top:384px;">Toggle<br>Night</div>
+      <div class="wire h arrow-r" style="left:532px;top:404px;width:84px;"></div>
+      <div class="node night" style="left:635px;top:374px;">ON<br>blank flash</div>
+      <div class="node night" style="left:635px;top:430px;">OFF<br>000000 flash</div>
+      <div class="wire h arrow-r" style="left:750px;top:404px;width:90px;"></div>
+      <div class="node small" style="left:858px;top:388px;">Save<br>EEPROM</div>
+
+      <!-- Night interval branch -->
+      <div class="pill" style="left:310px;top:505px;">LONG DOWN</div>
+      <div class="wire h arrow-r" style="left:286px;top:527px;width:125px;"></div>
+      <div class="node night" style="left:430px;top:507px;">Start<br>HHMM--</div>
+      <div class="btn" style="left:570px;top:510px;">SET</div>
+      <div class="wire h arrow-r" style="left:529px;top:527px;width:125px;"></div>
+      <div class="node night" style="left:675px;top:507px;">End<br>HHMM--</div>
+      <div class="btn" style="left:815px;top:510px;">SET</div>
+      <div class="wire h arrow-r" style="left:774px;top:527px;width:125px;"></div>
+      <div class="node small" style="left:920px;top:511px;">Save<br>EEPROM</div>
+      <div class="wire h arrow-r" style="left:1015px;top:527px;width:72px;"></div>
+      <div class="node small" style="left:1102px;top:511px;">Return</div>
+      <div class="caption" style="left:430px;top:562px;">4 digits: SET advances</div>
+      <div class="caption" style="left:675px;top:562px;">seconds tubes off</div>
+
+      <!-- Anti poison branch -->
+      <div class="pill" style="left:310px;top:610px;">LONG UP</div>
+      <div class="wire h arrow-r" style="left:286px;top:632px;width:125px;"></div>
+      <div class="node green" style="left:430px;top:612px;">Interval<br>1-9 min</div>
+      <div class="btn" style="left:570px;top:615px;">UP<br>DOWN</div>
+      <div class="wire h arrow-r" style="left:529px;top:632px;width:125px;"></div>
+      <div class="node green" style="left:675px;top:612px;">Only lamp 1<br>shows value</div>
+      <div class="btn" style="left:800px;top:615px;">SET</div>
+      <div class="wire h arrow-r" style="left:787px;top:632px;width:88px;"></div>
+      <div class="node small" style="left:895px;top:616px;">Save<br>EEPROM</div>
+      <div class="wire h arrow-r" style="left:990px;top:632px;width:72px;"></div>
+      <div class="node small" style="left:1078px;top:616px;">Return</div>
+
+      <div class="wire v arrow-d" style="left:485px;top:655px;height:92px;"></div>
+      <div class="node green wide" style="left:410px;top:770px;">Every N minutes<br>run 0-9</div>
+      <div class="wire h arrow-r" style="left:548px;top:792px;width:95px;"></div>
+      <div class="node green" style="left:660px;top:772px;">Visible lamps<br>0,1,2...9</div>
+      <div class="wire h arrow-r" style="left:762px;top:792px;width:95px;"></div>
+      <div class="node green" style="left:875px;top:772px;">About 3 sec<br>then read RTC</div>
+
+      <!-- Night blank state -->
+      <div class="node night wide" style="left:1240px;top:487px;">Night interval active</div>
+      <div class="wire h arrow-r" style="left:1175px;top:507px;width:55px;"></div>
+      <div class="node night wide" style="left:1460px;top:487px;">All tubes OFF<br>Both colons OFF</div>
+      <div class="caption" style="left:1465px;top:541px;">nothing lit</div>
+
+      <!-- Details / pin notes -->
+      <div class="note-box" style="left:1160px;top:690px;width:225px;max-width:225px;">
+        Confirmed colon lines:<br>
+        PD4 = HH:MM separator<br>
+        PD5 = MM:SS separator<br>
+        low = OFF, high = ON
+      </div>
+
+      <div class="note-box" style="left:1160px;top:805px;width:260px;max-width:260px;">
+        Display driver pins:<br>
+        DATA PC7, LATCH PC5,<br>
+        CLOCK PD3, OE PD2
+      </div>
+
+      <div class="note-box" style="left:1160px;top:910px;width:290px;max-width:290px;">
+        Stored settings:<br>
+        night ON/OFF, start/end, anti-poison interval, RGB mode, 12h/24h.
+      </div>
+    </div>
+  </div>
+</body>
+</html>

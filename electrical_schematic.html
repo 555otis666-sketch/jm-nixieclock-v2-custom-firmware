@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Electrical Overview - JM NixieClock V2.0</title>
+  <style>
+    :root {
+      --bg: #f5f5f5;
+      --paper: #fff;
+      --ink: #101010;
+      --muted: #666;
+      --grid: #ececec;
+      --line: #111;
+      --wire: #777;
+      --mcu: #e8f1ff;
+      --rtc: #e9f8ef;
+      --driver: #fff2d8;
+      --power: #ffe8e8;
+      --io: #f1eaff;
+      --tube: #ffe1d2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font: 14px/1.35 Arial, Helvetica, sans-serif;
+    }
+
+    header {
+      padding: 18px 22px 10px;
+    }
+
+    h1 {
+      margin: 0 0 6px;
+      font-size: 25px;
+      letter-spacing: 0;
+    }
+
+    .subtitle {
+      max-width: 1120px;
+      color: var(--muted);
+    }
+
+    .wrap {
+      padding: 14px 22px 30px;
+      overflow-x: auto;
+    }
+
+    .sheet {
+      width: 1460px;
+      background: var(--paper);
+      border: 2px solid #d7d7d7;
+      border-radius: 8px;
+      box-shadow: 0 8px 28px rgba(0, 0, 0, .08);
+      padding: 18px;
+    }
+
+    .legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-bottom: 14px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .swatch {
+      display: inline-block;
+      width: 22px;
+      height: 14px;
+      margin-right: 6px;
+      border: 1px solid var(--line);
+      border-radius: 3px;
+      vertical-align: -2px;
+    }
+
+    svg {
+      display: block;
+      width: 1420px;
+      height: 880px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background:
+        linear-gradient(var(--grid) 1px, transparent 1px),
+        linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+      background-size: 20px 20px;
+    }
+
+    .box {
+      stroke: var(--line);
+      stroke-width: 2;
+      rx: 8;
+    }
+
+    .mcu { fill: var(--mcu); }
+    .rtc { fill: var(--rtc); }
+    .driver { fill: var(--driver); }
+    .power { fill: var(--power); }
+    .io { fill: var(--io); }
+    .tube { fill: var(--tube); }
+    .white { fill: #fff; }
+
+    .title {
+      font-size: 17px;
+      font-weight: 700;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .text {
+      font-size: 13px;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .small {
+      font-size: 12px;
+      fill: var(--ink);
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .muted {
+      font-size: 11px;
+      fill: var(--muted);
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .wire {
+      stroke: var(--wire);
+      stroke-width: 1.6;
+      fill: none;
+      opacity: .58;
+    }
+
+    .bus {
+      stroke: var(--wire);
+      stroke-width: 3;
+      fill: none;
+      opacity: .58;
+    }
+
+    .dash {
+      stroke-dasharray: 7 5;
+    }
+
+    .arrow {
+      marker-end: url(#arrow);
+    }
+
+    .dot {
+      fill: var(--line);
+    }
+
+    .pin {
+      fill: #fff;
+      stroke: var(--line);
+      stroke-width: 1.4;
+    }
+
+    .section-label {
+      font-size: 14px;
+      font-weight: 700;
+      fill: #444;
+    }
+
+    .net-label {
+      font-size: 12px;
+      font-weight: 700;
+      fill: #111;
+      paint-order: stroke;
+      stroke: #fff;
+      stroke-width: 4px;
+      stroke-linejoin: round;
+    }
+
+    .tables {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid #d7d7d7;
+      background: #fff;
+    }
+
+    th,
+    td {
+      padding: 8px 10px;
+      border-bottom: 1px solid #e8e8e8;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #efefef;
+      font-weight: 700;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    code {
+      font-family: Consolas, "Courier New", monospace;
+      background: #f2f2f2;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+
+    .note {
+      margin-top: 16px;
+      padding: 11px 13px;
+      border: 1px solid #e1b199;
+      border-radius: 6px;
+      background: #fff3ed;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Electrical Overview - JM NixieClock V2.0 / IN-14</h1>
+    <div class="subtitle">
+      Reverse-engineered functional schematic for the tested board. It documents confirmed MCU pins and major blocks.
+      It is not a complete PCB schematic with every resistor, capacitor and high-voltage supply component.
+    </div>
+  </header>
+
+  <div class="wrap">
+    <div class="sheet">
+      <div class="legend">
+        <span><i class="swatch" style="background:var(--power)"></i>Power</span>
+        <span><i class="swatch" style="background:var(--mcu)"></i>MCU</span>
+        <span><i class="swatch" style="background:var(--rtc)"></i>RTC</span>
+        <span><i class="swatch" style="background:var(--driver)"></i>Tube drivers</span>
+        <span><i class="swatch" style="background:var(--io)"></i>User I/O</span>
+        <span><i class="swatch" style="background:var(--tube)"></i>Nixie tubes</span>
+      </div>
+
+      <svg viewBox="0 0 1420 880" aria-label="Electrical overview schematic">
+        <defs>
+          <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M0 0 L10 5 L0 10 Z" fill="#777"></path>
+          </marker>
+        </defs>
+
+        <!-- Section labels -->
+        <text class="section-label" x="45" y="38">POWER</text>
+        <text class="section-label" x="330" y="38">RTC AND BUTTONS</text>
+        <text class="section-label" x="650" y="38">MICROCONTROLLER</text>
+        <text class="section-label" x="1010" y="38">DISPLAY OUTPUTS</text>
+
+        <!-- Power section -->
+        <rect class="box power" x="45" y="65" width="210" height="105"></rect>
+        <text class="title" x="74" y="98">DC input</text>
+        <text class="text" x="74" y="126">DC jack / P1</text>
+        <text class="small" x="74" y="150">common GND</text>
+
+        <rect class="box power" x="45" y="225" width="210" height="105"></rect>
+        <text class="title" x="74" y="258">3.3 V regulator</text>
+        <text class="text" x="74" y="286">logic supply</text>
+        <text class="small" x="74" y="310">STM8, RTC, 74HC595</text>
+
+        <rect class="box power" x="45" y="385" width="210" height="120"></rect>
+        <text class="title" x="74" y="418">High voltage supply</text>
+        <text class="text" x="74" y="446">boost converter</text>
+        <text class="small" x="74" y="470">Nixie tube anodes</text>
+        <text class="muted" x="74" y="490">danger: high voltage</text>
+
+        <!-- RTC and buttons -->
+        <rect class="box rtc" x="330" y="90" width="220" height="115"></rect>
+        <text class="title" x="396" y="124">DS3231NS</text>
+        <text class="text" x="375" y="152">I2C real-time clock</text>
+        <text class="small" x="375" y="176">backup battery holder</text>
+
+        <rect class="box io" x="330" y="270" width="220" height="130"></rect>
+        <text class="title" x="404" y="304">Buttons</text>
+        <text class="text" x="373" y="334">SET / DOWN / UP</text>
+        <text class="small" x="373" y="362">active low to GND</text>
+
+        <rect class="box io" x="330" y="465" width="220" height="120"></rect>
+        <text class="title" x="389" y="499">ST-Link V2</text>
+        <text class="text" x="370" y="528">SWIM programmer</text>
+        <text class="small" x="370" y="554">SWIM / NRST / 3.3 V / GND</text>
+
+        <!-- MCU -->
+        <rect class="box mcu" x="650" y="120" width="260" height="465"></rect>
+        <text class="title" x="715" y="155">STM8S003F3P6</text>
+        <text class="small" x="715" y="180">main controller</text>
+
+        <!-- MCU left pins -->
+        <circle class="pin" cx="650" cy="235" r="5"></circle>
+        <text class="small" x="548" y="239">PB4 / pin 12</text>
+        <circle class="pin" cx="650" cy="270" r="5"></circle>
+        <text class="small" x="548" y="274">PB5 / pin 11</text>
+
+        <circle class="pin" cx="650" cy="340" r="5"></circle>
+        <text class="small" x="552" y="344">PA3 / pin 10</text>
+        <circle class="pin" cx="650" cy="375" r="5"></circle>
+        <text class="small" x="558" y="379">PA2 / pin 6</text>
+        <circle class="pin" cx="650" cy="410" r="5"></circle>
+        <text class="small" x="558" y="414">PA1 / pin 5</text>
+
+        <circle class="pin" cx="780" cy="585" r="5"></circle>
+        <text class="small" x="795" y="607">SWIM / NRST</text>
+
+        <!-- MCU right pins -->
+        <circle class="pin" cx="910" cy="210" r="5"></circle>
+        <text class="small" x="925" y="214">PC7 / pin 17</text>
+        <circle class="pin" cx="910" cy="250" r="5"></circle>
+        <text class="small" x="925" y="254">PC5 / pin 15</text>
+        <circle class="pin" cx="910" cy="290" r="5"></circle>
+        <text class="small" x="925" y="294">PD3 / pin 20</text>
+        <circle class="pin" cx="910" cy="330" r="5"></circle>
+        <text class="small" x="925" y="334">PD2 / pin 19</text>
+
+        <circle class="pin" cx="910" cy="410" r="5"></circle>
+        <text class="small" x="925" y="414">PC3</text>
+        <circle class="pin" cx="910" cy="445" r="5"></circle>
+        <text class="small" x="925" y="449">PC4</text>
+        <circle class="pin" cx="910" cy="480" r="5"></circle>
+        <text class="small" x="925" y="484">PC6</text>
+
+        <circle class="pin" cx="910" cy="535" r="5"></circle>
+        <text class="small" x="925" y="539">PD4</text>
+        <circle class="pin" cx="910" cy="565" r="5"></circle>
+        <text class="small" x="925" y="569">PD5</text>
+
+        <!-- Outputs -->
+        <rect class="box driver" x="1065" y="145" width="285" height="210"></rect>
+        <text class="title" x="1137" y="180">74HC595 chain</text>
+        <text class="text" x="1100" y="213">U14 ... U30</text>
+        <text class="text" x="1100" y="241">serial-to-parallel outputs</text>
+        <text class="small" x="1100" y="270">DATA, LATCH, CLOCK, OE</text>
+        <text class="muted" x="1100" y="300">digit mapping is in firmware</text>
+
+        <rect class="box driver" x="1065" y="430" width="285" height="130"></rect>
+        <text class="title" x="1131" y="464">ULN2003G drivers</text>
+        <text class="text" x="1100" y="496">Nixie cathode sinking</text>
+        <text class="small" x="1100" y="524">example: U22 = ULN2003G</text>
+
+        <rect class="box tube" x="1065" y="650" width="285" height="110"></rect>
+        <text class="title" x="1164" y="686">6x IN-14</text>
+        <text class="text" x="1130" y="716">tubes 1 ... 6</text>
+        <text class="small" x="1130" y="740">common HV anode supply</text>
+
+        <rect class="box io" x="1065" y="25" width="135" height="80"></rect>
+        <text class="title" x="1101" y="58">RGB LED</text>
+        <text class="small" x="1101" y="84">R / B / G</text>
+
+        <rect class="box io" x="1215" y="25" width="135" height="80"></rect>
+        <text class="title" x="1247" y="58">Colons</text>
+        <text class="small" x="1240" y="84">HH:MM, MM:SS</text>
+
+        <!-- Power wires -->
+        <path class="wire arrow" d="M255 118 H310"></path>
+        <text class="net-label" x="270" y="110">VIN</text>
+        <path class="wire arrow" d="M150 170 V225"></path>
+        <text class="net-label" x="162" y="203">VIN</text>
+        <path class="wire arrow" d="M255 278 H650"></path>
+        <text class="net-label" x="372" y="268">3.3 V + GND</text>
+        <path class="wire arrow" d="M255 445 H1015 V705 H1065"></path>
+        <text class="net-label" x="612" y="434">HV anodes</text>
+
+        <!-- I2C -->
+        <path class="wire" d="M550 235 H650"></path>
+        <path class="wire" d="M550 270 H650"></path>
+        <text class="net-label" x="573" y="225">SCL</text>
+        <text class="net-label" x="573" y="260">SDA</text>
+
+        <!-- Buttons -->
+        <path class="wire" d="M550 340 H650"></path>
+        <path class="wire" d="M550 375 H650"></path>
+        <path class="wire" d="M550 410 H650"></path>
+        <text class="net-label" x="574" y="330">SET</text>
+        <text class="net-label" x="570" y="365">DOWN</text>
+        <text class="net-label" x="578" y="400">UP</text>
+
+        <!-- ST-Link -->
+        <path class="wire dash" d="M550 525 H780 V585"></path>
+        <text class="net-label" x="610" y="515">SWIM / NRST</text>
+
+        <!-- Shift register control: separated horizontal lines -->
+        <path class="bus arrow" d="M910 210 H1065"></path>
+        <path class="wire arrow" d="M910 250 H1065"></path>
+        <path class="wire arrow" d="M910 290 H1065"></path>
+        <path class="wire arrow" d="M910 330 H1065"></path>
+        <text class="net-label" x="970" y="200">DATA</text>
+        <text class="net-label" x="966" y="240">LATCH</text>
+        <text class="net-label" x="966" y="280">CLOCK</text>
+        <text class="net-label" x="985" y="320">OE</text>
+
+        <path class="bus arrow" d="M1208 355 V430"></path>
+        <text class="net-label" x="1220" y="397">parallel outputs</text>
+        <path class="bus arrow" d="M1208 560 V650"></path>
+        <text class="net-label" x="1222" y="610">cathodes</text>
+
+        <!-- RGB, routed upward with no crossings over driver bus -->
+        <path class="wire arrow" d="M910 410 H980 V50 H1065"></path>
+        <path class="wire arrow" d="M910 445 H995 V68 H1065"></path>
+        <path class="wire arrow" d="M910 480 H1010 V86 H1065"></path>
+        <text class="net-label" x="936" y="400">RED</text>
+        <text class="net-label" x="936" y="435">BLUE</text>
+        <text class="net-label" x="936" y="470">GREEN</text>
+
+        <!-- Colons, routed separately -->
+        <path class="wire arrow" d="M910 535 H1030 V58 H1215"></path>
+        <path class="wire arrow" d="M910 565 H1045 V84 H1215"></path>
+        <text class="net-label" x="937" y="525">HH:MM</text>
+        <text class="net-label" x="937" y="555">MM:SS</text>
+
+        <!-- Ground bus note -->
+        <path class="wire" d="M45 820 H1350"></path>
+        <circle class="dot" cx="150" cy="820" r="4"></circle>
+        <text class="net-label" x="165" y="810">Common GND: DC input, 3.3 V logic, STM8, DS3231, 74HC595, ULN2003 and ST-Link</text>
+      </svg>
+
+      <div class="tables">
+        <table>
+          <thead>
+            <tr>
+              <th>Signal</th>
+              <th>STM8 pin</th>
+              <th>Connected block</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>DATA</td><td><code>PC7</code>, physical pin 17</td><td>74HC595 serial data input</td></tr>
+            <tr><td>LATCH</td><td><code>PC5</code>, physical pin 15</td><td>74HC595 RCLK / storage register latch</td></tr>
+            <tr><td>CLOCK</td><td><code>PD3</code>, physical pin 20</td><td>74HC595 SRCLK / shift clock</td></tr>
+            <tr><td>OE</td><td><code>PD2</code>, physical pin 19</td><td>74HC595 output enable</td></tr>
+            <tr><td>SCL</td><td><code>PB4</code>, physical pin 12</td><td>DS3231 I2C clock</td></tr>
+            <tr><td>SDA</td><td><code>PB5</code>, physical pin 11</td><td>DS3231 I2C data</td></tr>
+            <tr><td>SET</td><td><code>PA3</code>, physical pin 10</td><td>active-low button</td></tr>
+            <tr><td>DOWN</td><td><code>PA2</code>, physical pin 6</td><td>active-low button</td></tr>
+            <tr><td>UP</td><td><code>PA1</code>, physical pin 5</td><td>active-low button</td></tr>
+          </tbody>
+        </table>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Output</th>
+              <th>STM8 line</th>
+              <th>Note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>RGB red</td><td><code>PC3</code></td><td>confirmed by firmware test</td></tr>
+            <tr><td>RGB blue</td><td><code>PC4</code></td><td>confirmed by firmware test</td></tr>
+            <tr><td>RGB green</td><td><code>PC6</code></td><td>confirmed by firmware test</td></tr>
+            <tr><td>Hour/minute colon</td><td><code>PD4</code></td><td>low = off, high = on</td></tr>
+            <tr><td>Minute/second colon</td><td><code>PD5</code></td><td>low = off, high = on</td></tr>
+            <tr><td>Nixie cathodes</td><td>74HC595 -> ULN2003G</td><td>digit bit mapping is implemented in firmware</td></tr>
+            <tr><td>Nixie anodes</td><td>HV boost converter</td><td>shared high-voltage anode supply</td></tr>
+            <tr><td>Programming</td><td>SWIM / NRST / 3.3 V / GND</td><td>ST-Link V2, STM8S003F3 target</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="note">
+        <strong>Safety note:</strong> the Nixie tube supply is high voltage. Disconnect external DC power before probing
+        or wiring the programmer. This drawing documents the logic-level connections we confirmed; the HV converter
+        itself still needs a separate detailed schematic if it is going to be serviced or modified.
+      </div>
+    </div>
+  </div>
+</body>
+</html>
