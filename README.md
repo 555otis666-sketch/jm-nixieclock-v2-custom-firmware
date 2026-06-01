@@ -41,7 +41,6 @@ Tested on one clock board:
 - `electrical_schematic.html` - reverse-engineered electrical overview
 - `docs/hardware.md` - confirmed hardware pin map
 - `docs/menu.md` - user interface behavior
-- `docs/flashing.md` - build and flashing notes
 - `build.ps1` - build firmware with ST Toolset assembler
 - `flash.ps1` - flash `.s19` with STVP command line
 
@@ -81,9 +80,3 @@ powershell -ExecutionPolicy Bypass -File .\flash.ps1
 ## Hardware warning
 
 This project drives a Nixie clock board. The board contains a high-voltage supply for the tubes. Disconnect power before probing or wiring the programmer, and be careful around the tube supply section.
-
-## Notes
-
-The `reference/` folder, tube pin helper and temporary `firmware/test_*` bring-up programs are intentionally ignored. They were useful while reverse engineering the board, but they are not part of the clean public project.
-
-No license has been selected yet. Add a license before publishing if this repository should be reusable by other people.

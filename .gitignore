@@ -1,15 +1,4 @@
-# Local reverse-engineering workspace
-reference/
-tube_pin_selector.html
-github_upload/
-
-# Firmware folder: keep only the real firmware and its release image
-firmware/*
-!firmware/README.md
-!firmware/jm_nixieclock_v2_custom_firmware.asm
-!firmware/jm_nixieclock_v2_custom_firmware.s19
-
-# ST assembler/linker artifacts, in case they appear elsewhere
+# ST assembler/linker artifacts
 *.cod
 *.grp
 *.lsr
@@ -23,3 +12,4 @@ Thumbs.db
 Desktop.ini
 .vscode/
 .idea/
+
