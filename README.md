@@ -41,6 +41,7 @@ Tested on one clock board:
 - `electrical_schematic.html` - reverse-engineered electrical overview
 - `docs/hardware.md` - confirmed hardware pin map
 - `docs/menu.md` - user interface behavior
+- `docs/flashing.md` - flashing with ST-Link V2 and STVP
 
 ## Hardware warning
 
