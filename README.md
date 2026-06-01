@@ -6,6 +6,17 @@ Custom firmware for the Geek Styles / `JM NixieClock V2.0` IN-14 clock board wit
 
 The firmware was written after reverse engineering the board with a multimeter and ST-Link V2. The main goal was to replace the original fixed night blanking mode with configurable blanking hours.
 
+## Also known as
+
+This board may be found online under several similar names:
+
+- `JM NixieClock V2.0`
+- `JM Nixie Clock V2.0`
+- `GeekStyles IN14 Nixie Clock`
+- `Geek Styles IN-14 Nixie Clock`
+- `IN-14 STM8 Nixie Clock`
+- `STM8S003F3P6 DS3231 Nixie Clock`
+
 ## Current status
 
 Tested on one clock board:
