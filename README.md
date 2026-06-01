@@ -1,5 +1,7 @@
 # JM NixieClock V2.0 Custom Firmware by 555otis666
 
+![JM NixieClock V2.0 board](assets/jm-nixieclock-v2-board.jpg)
+
 Custom firmware for the Geek Styles / `JM NixieClock V2.0` IN-14 clock board with an `STM8S003F3P6`, `DS3231NS` RTC and chained `74HC595` display drivers.
 
 The firmware was written after reverse engineering the board with a multimeter and ST-Link V2. The main goal was to replace the original fixed night blanking mode with configurable blanking hours.
