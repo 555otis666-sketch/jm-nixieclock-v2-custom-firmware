@@ -26,7 +26,7 @@ Tested on one clock board:
 
 - time display from DS3231: `HHMMSS`
 - time setting with `SET`, `UP`, `DOWN`
-- 12h/24h mode, with leading zero hidden in 12h mode
+- 12h/24h mode
 - configurable night blanking start/end time
 - night blanking turns off tubes and both colon separators
 - RGB backlight mode switching
