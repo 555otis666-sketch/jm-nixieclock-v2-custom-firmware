@@ -41,8 +41,6 @@ Tested on one clock board:
 - `electrical_schematic.html` - reverse-engineered electrical overview
 - `docs/hardware.md` - confirmed hardware pin map
 - `docs/menu.md` - user interface behavior
-- `build.ps1` - build firmware with ST Toolset assembler
-- `flash.ps1` - flash `.s19` with STVP command line
 
 ## Hardware warning
 
