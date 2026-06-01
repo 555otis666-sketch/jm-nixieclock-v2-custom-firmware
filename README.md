@@ -42,7 +42,6 @@ Tested on one clock board:
 - `docs/hardware.md` - confirmed hardware pin map
 - `docs/menu.md` - user interface behavior
 - `docs/flashing.md` - build and flashing notes
-- `docs/github.md` - publishing notes
 - `build.ps1` - build firmware with ST Toolset assembler
 - `flash.ps1` - flash `.s19` with STVP command line
 
