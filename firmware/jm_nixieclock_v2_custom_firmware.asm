@@ -178,8 +178,7 @@ main_after_settings.l
 	jra main_loop
 
 set_default_settings.l
-	ld A,#1
-	ld night_en,A
+	clr night_en
 	ld A,#$22
 	ld night_start_h,A
 	clr night_start_m
@@ -702,6 +701,35 @@ handle_down.l
 	cp A,#8
 	jrult down_rgb_ok
 	clr rgb_mode
+	ld A,#3
+	ld poison_repeat,A
+down_rgb_auto_loop.l
+	bset PC_ODR,#3
+	bres PC_ODR,#4
+	bres PC_ODR,#6
+	call delay_refresh
+	call delay_refresh
+	call delay_refresh
+	bres PC_ODR,#3
+	bres PC_ODR,#4
+	bset PC_ODR,#6
+	call delay_refresh
+	call delay_refresh
+	call delay_refresh
+	bres PC_ODR,#3
+	bset PC_ODR,#4
+	bres PC_ODR,#6
+	call delay_refresh
+	call delay_refresh
+	call delay_refresh
+	bset PC_ODR,#3
+	bset PC_ODR,#4
+	bres PC_ODR,#6
+	call delay_refresh
+	call delay_refresh
+	call delay_refresh
+	dec poison_repeat
+	jrne down_rgb_auto_loop
 down_rgb_ok.l
 	call save_settings
 	jra down_done
@@ -914,16 +942,19 @@ digits_to_bcd_hm.l
 
 load_settings.l
 	ld A,EEP_MAGIC
-	cp A,#$5a
+	cp A,#$5b
 	jreq load_settings_ok
-	ld A,#1
-	ld night_en,A
+	clr night_en
 	ld A,#$22
 	ld night_start_h,A
 	clr night_start_m
 	ld A,#$07
 	ld night_end_h,A
 	clr night_end_m
+	ld A,#1
+	ld poison_min,A
+	clr rgb_mode
+	clr hour_mode
 	call save_settings
 	ret
 load_settings_ok.l
@@ -960,7 +991,7 @@ load_rgb_ok.l
 
 save_settings.l
 	call eeprom_unlock
-	ld A,#$5a
+	ld A,#$5b
 	ld EEP_MAGIC,A
 	ld A,night_en
 	ld EEP_NIGHT_EN,A
